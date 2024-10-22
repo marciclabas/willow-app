@@ -52,9 +52,9 @@ To simplify running locally, if not provided it will create a new assistant. It 
 
 The app uses OpenAI's [Assistants API](https://platform.openai.com/docs/assistants/overview), which takes care of:
 
-- **Conversation Tracking**: the API tracks the context of the conversation, so there's no need for the frontend or backend to store entire conversations or resend them with each request.
-- **Token Clipping**: the conversation context is clipped automatically by the API to stay within token limits, preventing overflow while retaining the most recent and relevant messages.
-- **Consistent Prompts**: the same initial prompt is provided for each conversation to ensure consistent behavior from the chatbot.
+- **Conversation Tracking**: thus we don't need to store them nor send the whole thing every time.
+- **Token Clipping** (to stay within context size limits)
+- **Consistent Prompts**: we only pass a prompt once, and it'll be included in every conversation.
 
 #### Thread IDs
 
