@@ -40,9 +40,9 @@ Assuming you have python >= 3.10 installed:
     chatbot-api
     ```
 
-This will start a uvicorn server at `http://localhost:8000` and create a `db.sqlite` file (unless you specify a different DB URL via `--sql` or the `SQL_CONNECTION_STRING` env var).
+This will start a uvicorn server at `http://localhost:8000` and create a `.data/db.sqlite` file (unless you specify a different DB URL via `--sql` or the `SQL_CONNECTION_STRING` env var).
 
-To simplify running locally, if not provided it will create a new assistant. It will store the ID in a `assistant_id.txt` file.
+To simplify running locally, if not provided it will create a new assistant. It will store the ID in a `.data/assistant_id.txt` file.
 
 ## Technical Details
 
