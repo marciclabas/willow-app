@@ -14,10 +14,9 @@ def main():
 
   parser = ArgumentParser(description=description)
   parser.add_argument('--assistant', **env('ASSISTANT_ID', required=False), help='OpenAI Assistant ID. Will be created if not provided. Env var: `ASSISTANT_ID`')
-  parser.add_argument('--api-key', **env('OPENAI_API_KEY'), help='OpenAI API key. Env var: `OPENAI_API_KEY`')
+  parser.add_argument('--api-key', **env('OPENAI_API_KEY', required=False), help='OpenAI API key. Env var: `OPENAI_API_KEY`')
   parser.add_argument('--model', **env('OPENAI_MODEL', default='gpt-4o'), help='OpenAI model to use. Env var: `OPENAI_MODEL`')
-  parser.add_argument('--sql', **env('SQL_CONN_STR', default='sqlite+aiosqlite:///db.sqlite'), help='SQL connection string. Env var: `SQL_CONN_STR`')
-  parser.add_argument('--mock', action='store_true', help='Use mock assistant instead of OpenAI. For testing purposes.')
+  parser.add_argument('--sql', **env('SQL_CONN_STR', default='sqlite+aiosqlite:///.data/db.sqlite'), help='SQL connection string. Env var: `SQL_CONN_STR`')
 
   parser.add_argument('--host', default='0.0.0.0')
   parser.add_argument('-p', '--port', type=int, default=8000)
@@ -27,15 +26,23 @@ def main():
 
   import asyncio
 
-  if args.mock:
+  if args.api_key is None:
+    print(f'[INFO] No OPENAI_API_KEY provided. Running in mock mode.')
     from chatbot_api import MockAssistant
     assistant = MockAssistant()
   else:
     from chatbot_api import OpenAIAssistant, create_assistant
     from openai import AsyncOpenAI
-    openai = AsyncOpenAI()
+    openai = AsyncOpenAI(api_key=args.api_key)
     if (assistant_id := args.assistant) is None:
-      assistant_id = asyncio.run(create_assistant(openai, model=args.model))
+      if os.path.exists('.data/assistant_id.txt'):
+        with open('assistant_id.txt') as f:
+          assistant_id = f.read().strip()
+      else:
+        assistant_id = asyncio.run(create_assistant(openai, model=args.model))
+        with open('.data/assistant_id.txt', 'w') as f:
+          f.write(assistant_id)
+        print(f'[INFO] Created assistant with ID: {assistant_id}')
     assistant = OpenAIAssistant(openai, assistant_id)
 
   from sqlalchemy.ext.asyncio import create_async_engine

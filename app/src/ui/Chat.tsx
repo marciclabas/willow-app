@@ -10,7 +10,7 @@ export function Chat(props: Parameters<typeof VStack>[0]) {
   const end = useRef<HTMLDivElement>(null)
 
   function send() {
-    if (input) {
+    if (input && !thinking) {
       sendMsg(input)
       setInput('')
     }

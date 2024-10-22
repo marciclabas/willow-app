@@ -2,6 +2,7 @@ from typing_extensions import AsyncIterable, Protocol
 from dataclasses import dataclass
 from uuid import uuid4
 from collections import defaultdict
+import asyncio
 from functools import cache
 from openai import AsyncOpenAI
 from openai.types import ChatModel
@@ -36,13 +37,12 @@ class MockAssistant(Assistant):
     return str(uuid4())
   
   async def chat(self, message: str, *, threadId: str) -> AsyncIterable[str]:
+    import lorem
     if 'idea' in message.lower():
-      yield f'idea: "Super mocked idea number {len(message)}"\n'
-    yield f'message: "# Cool!\n- hello\n- world\n1. First\n2. Second\n"\n'
-    # yield f'message: "Starting mock response to message: {message}\n'
-    # yield f'This is part 1, referring to {threadId}.\n'
-    # yield f'This is part 2, referring to {threadId} again.\n'
-    # yield f'Well, that was it, thank you!."\n'
+      yield f'idea: "{lorem.sentence()}"\n'
+    for c in f'message: "{lorem.text()}"\n':
+      await asyncio.sleep(0.01)
+      yield c
 
 @dataclass
 class OpenAIAssistant(Assistant):

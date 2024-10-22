@@ -23,7 +23,7 @@ export function Sidebar(props: Parameters<typeof VStack>[0]) {
         </VStack>
       </Box>
 
-      <Button onClick={reset} colorScheme='red' w='100%'>Reset</Button>
+      <Button onClick={reset} variant='ghost' colorScheme='red' w='100%'>Reset</Button>
     </VStack>
   )
 }

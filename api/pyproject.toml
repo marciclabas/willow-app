@@ -11,7 +11,7 @@ authors = [
 description = "package_description"
 dependencies = [
   "pydantic", "openai", "fastapi", "uvicorn[standard]", "streamed-yaml", "python-dotenv",
-  "aiosqlite", "sqlmodel",
+  "aiosqlite", "sqlmodel", "lorem",
 ]
 requires-python = ">=3.10"
 readme = {file="README.md", content-type="text/markdown"}

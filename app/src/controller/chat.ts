@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useMemo, useRef, useState } from 'react'
 import { v4 as uuid4 } from 'uuid'
 import { Chat } from './client'
 import { contextize } from 'contextize'
@@ -34,7 +34,7 @@ function useChat({ chat, onIdea, onError }: Props): Context {
   const setLastMessage = useCallback(setLast(setMessages), []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const [thinking, setThinking] = useState(false)
-  const [chatId, setChatId] = useState(() => uuid4())
+  const chatId = useRef(uuid4())
 
   const send = useCallback(async (message: string) => {
     setThinking(true)
@@ -42,7 +42,9 @@ function useChat({ chat, onIdea, onError }: Props): Context {
 
     let idea = ''
     let ideas = 0
-    for await (const msg of chat(message, chatId)) {
+    for await (const msg of chat(message, chatId.current)) {
+      if (msg.tag !== 'error' && msg.chatId !== chatId.current) 
+        break
       if (msg.tag === 'idea') {
         idea += msg.chunk
         if (msg.done) {
@@ -66,7 +68,7 @@ function useChat({ chat, onIdea, onError }: Props): Context {
     setMessages([])
     setIdeas([])
     setThinking(false)
-    setChatId(uuid4())
+    chatId.current = uuid4()
   }, [])
 
   return useMemo(() => ({ messages, ideas, thinking, send, reset }), [messages, ideas, thinking, send, reset])
