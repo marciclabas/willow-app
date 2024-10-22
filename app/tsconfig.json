@@ -22,7 +22,7 @@
     "noImplicitAny": false,
 
     "paths": {
-      "@controller": ["./src/controller"]
+      "@controller": ["./src/controller"],
     }
   },
   "include": ["src"],

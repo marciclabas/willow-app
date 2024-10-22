@@ -7,7 +7,7 @@ from openai import AsyncOpenAI
 from openai.types import ChatModel
 from openai.types.beta.assistant_stream_event import ThreadMessageDelta
 from streamed_yaml import chunked_parse
-from willow_api import BotMessage
+from chatbot_api import BotMessage
 
 async def parse_response(response: AsyncIterable[str], *, min_size: int = 20) -> AsyncIterable[BotMessage]:
   """Parse the response from the Assistant API into BotMessages, chunking them to be at least `min_size` chars"""

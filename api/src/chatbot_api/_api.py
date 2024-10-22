@@ -1,7 +1,7 @@
 from fastapi import FastAPI, WebSocket, Response
-from willow_api import Assistant, DB, UserMessage, DoneMessage, parse_response
+from chatbot_api import Assistant, DB, UserMessage, DoneMessage, parse_response
 
-def api(assistant: Assistant, db: DB):
+def api(assistant: Assistant, db: DB, *, min_chars: int = 20):
 
   app = FastAPI()
 
@@ -18,7 +18,7 @@ def api(assistant: Assistant, db: DB):
           threadId = await assistant.new_thread()
           await db.new_thread(chatId=msg.chatId, threadId=threadId)
 
-      async for out in parse_response(assistant.chat(msg.message, threadId=threadId)):
+      async for out in parse_response(assistant.chat(msg.message, threadId=threadId), min_chars=min_chars):
         out.chatId = chatId
         await ws.send_text(out.model_dump_json(exclude_none=True))
 

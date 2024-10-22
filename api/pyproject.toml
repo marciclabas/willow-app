@@ -3,7 +3,7 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "willow-api"
+name = "chatbot-api"
 version = "0.1.0"
 authors = [
   {name="Marcel Claramunt", email="marcel@moveread.com"}
@@ -11,13 +11,16 @@ authors = [
 description = "package_description"
 dependencies = [
   "pydantic", "openai", "fastapi", "uvicorn[standard]", "streamed-yaml", "python-dotenv",
-  "aiosqlite",
+  "aiosqlite", "sqlmodel",
 ]
 requires-python = ">=3.10"
 readme = {file="README.md", content-type="text/markdown"}
 
 [project.urls]
-repo = "https://github.com/moveread/REPO.git"
+repo = "https://github.com/marciclabas/willow-app.git"
+
+[project.scripts]
+chatbot-api = "chatbot_api.cli:main"
 
 # [project.optional-dependencies]
 # test = [

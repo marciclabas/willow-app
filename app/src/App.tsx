@@ -15,14 +15,14 @@ export function App() {
       toast.update(toastId.current, {
         title: `Ideas Saved (x${count})`,
         status: 'success', position: 'top',
-        duration: 2000, isClosable: true,
+        duration: 5000, isClosable: true,
       })
     else
       toastId.current = toast({
         title: 'Idea Saved',
         description: idea,
         status: 'success', position: 'top',
-        duration: 2000, isClosable: true,
+        duration: 5000, isClosable: true,
       })
   }, [toast])
 

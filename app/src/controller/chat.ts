@@ -25,6 +25,7 @@ export type Props = {
 const setLast = <T>(setState: Dispatch<SetStateAction<T[]>>) => (fn: (x: T) => T) =>
   setState(curr => [...curr.slice(0, -1), fn(curr[curr.length-1])])
 
+/** Hook encapsulating the app state and API calls */
 function useChat({ chat, onIdea, onError }: Props): Context {
 
   const [ideas, setIdeas] = useState<string[]>([])
