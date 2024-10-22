@@ -11,21 +11,28 @@ class Thread(SQLModel, table=True):
 @dataclass
 class DB:
   engine: AsyncEngine
-  session: AsyncSession = None # type: ignore
   threads_cache: dict[str, str] = field(default_factory=dict)
+  _session: AsyncSession | None = None
+
+  @property
+  def session(self) -> AsyncSession:
+    if self._session is None:
+      raise RuntimeError('The client must be used as an async context manager: `async with db: ...`')
+    return self._session
 
   async def init(self):
     async with self.engine.begin() as conn:
       await conn.run_sync(SQLModel.metadata.create_all)
 
   async def __aenter__(self):
-    self.session = AsyncSession(self.engine)
+    self._session = AsyncSession(self.engine)
     return self
   
   async def __aexit__(self, *_):
     await self.session.close()
 
   async def new_thread(self, *, threadId: str, chatId: str):
+    """Create a new `threadId <-> chatId` mapping"""
     thread = Thread(threadId=threadId, chatId=chatId)
     self.session.add(thread)
     await self.session.commit()
