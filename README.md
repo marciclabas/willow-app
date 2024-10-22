@@ -58,17 +58,17 @@ The app uses OpenAI's [Assistants API](https://platform.openai.com/docs/assistan
 
 #### Thread IDs
 
-To simplify the frontend, it generates random conversation IDs. We keep in a DB the mapping from these to the OpenAI's thread IDs. Threads are created on demand upon the first message of a conversation.
+To simplify the frontend, it generates random conversation IDs. We keep a mapping `frontendId <-> threadId` (OpenAI's terminology) in a DB. Threads are created on demand upon the first message of a conversation.
 
 ### LLM Response Format
 
-The model is instructed to respond in a structured, single-level YAML format. This format is both lightweight and easy to stream in real time. See the prompt [here](api/src/chatbot_api/instructions.txt).
+The model is instructed to respond in a YAML-like format. This format is both lightweight and easy to stream in real time. See the prompt [here](api/src/chatbot_api/instructions.txt).
 
 ```yaml
 idea: '...'
 message: '...'
 ```
-- Multiple Ideas: the model can suggest multiple ideas in a single response.
+- Multiple Ideas: the model can decide to save multiple ideas in a single response.
 - Single Message: the model outputs only one message per response, and any ideas appear before the message.
 
 Example:
