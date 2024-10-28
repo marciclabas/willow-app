@@ -25,6 +25,7 @@ def main():
   args = parser.parse_args()
 
   import asyncio
+  os.makedirs('.data', exist_ok=True)
 
   if args.api_key is None:
     print(f'[INFO] No OPENAI_API_KEY provided. Running in mock mode.')
